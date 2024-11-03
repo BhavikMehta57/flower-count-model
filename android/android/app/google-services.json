@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "555863770237",
+    "project_id": "camera-assignment-b87fd",
+    "storage_bucket": "camera-assignment-b87fd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555863770237:android:968350a7b997c2df2d5d14",
+        "android_client_info": {
+          "package_name": "com.artemis.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAqgTQ_IAxWI3qlwgopP3M3QQyk6RDAOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
