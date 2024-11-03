@@ -1,0 +1,126 @@
+.data-table {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow-x: auto; /* Allow horizontal scrolling for small screens */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.export-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.export-buttons button {
+    background-color: #ffa500;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.export-buttons button:hover {
+    background-color: #cc8400;
+}
+
+.rows-per-page {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Aligns the label to the right */
+    margin-top: 15px; /* Space above the rows per page label */
+    margin-bottom: 15px;
+}
+
+.rows-per-page select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Rounded corners for the select box */
+    margin-left: 10px; /* Space between the label and the select box */
+    cursor: pointer;
+}
+
+.rows-per-page label {
+    margin-right: 10px; /* Space between the label text and the select box */
+}
+
+.table-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* Ensure minimum width for better readability */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.pagination {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    background-color: #e0e0e0;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #ddd;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .data-table {
+        padding: 10px; /* Reduce padding on small screens */
+    }
+
+    th, td {
+        padding: 8px; /* Adjust padding for smaller screens */
+        font-size: 14px; /* Reduce font size for better readability */
+    }
+
+    .header {
+        flex-direction: column; /* Stack elements on small screens */
+        align-items: flex-start; /* Align to start */
+    }
+
+    .export-buttons {
+        margin-top: 10px; /* Space between title and buttons */
+    }
+
+    table {
+        min-width: auto; /* Allow table to shrink on small screens */
+    }
+}
