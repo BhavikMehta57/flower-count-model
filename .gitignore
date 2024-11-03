@@ -1,0 +1,13 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Backend
+# python cache
+/Backend/__pycache__
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+/Backend/installed_packages.txt
