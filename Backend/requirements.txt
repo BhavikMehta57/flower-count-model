@@ -6,3 +6,8 @@ torch
 pillow
 datasets
 timm
+pymysql 
+sqlalchemy 
+passlib 
+bcrypt 
+python-jose

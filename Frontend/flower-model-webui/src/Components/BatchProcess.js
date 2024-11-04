@@ -1,89 +1,135 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import DataTable from './DataTable';
 import '../App.css';
 
-const BatchProcess = () => {
-    const [taskId, setTaskId] = useState(null);
+const BatchProcess = ({ token }) => {
+    const [taskId, setTaskId] = useState(localStorage.getItem('taskId') || null);
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState('');
-    const [imagesProcessed, setImagesProcessed] = useState(0);
-    const [totalImages, setTotalImages] = useState(0);
-    const [results, setResults] = useState([{}]);
+    const [status, setStatus] = useState(localStorage.getItem('status') || '');
+    const [imagesProcessed, setImagesProcessed] = useState(Number(localStorage.getItem('imagesProcessed')) || 0);
+    const [totalImages, setTotalImages] = useState(Number(localStorage.getItem('totalImages')) || 0);
+    const [results, setResults] = useState(JSON.parse(localStorage.getItem('results') || '[{}]'));
+    const pollingTimeout = useRef(null);
+
+    // Save state to localStorage on each change
+    useEffect(() => {
+        if (taskId) localStorage.setItem('taskId', taskId);
+    }, [taskId]);
+
+    useEffect(() => {
+        localStorage.setItem('status', status);
+    }, [status]);
+
+    useEffect(() => {
+        localStorage.setItem('imagesProcessed', imagesProcessed);
+    }, [imagesProcessed]);
+
+    useEffect(() => {
+        localStorage.setItem('totalImages', totalImages);
+    }, [totalImages]);
+
+    useEffect(() => {
+        localStorage.setItem('results', JSON.stringify(results));
+    }, [results]);
 
     const handleProcessImages = async () => {
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:8000/process-images/');
-            console.log('Process Images Response: ', response.data); // Debugging line
+            const response = await axios.post(
+                'http://localhost:8000/process-images/',
+                {},
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
             if (response.data && response.data.task_id) {
-                console.log('Task ID:', response.data.task_id); // Debugging line
                 setTaskId(response.data.task_id);
-                console.log(taskId)
-                fetchStatus(response.data.task_id)
+                fetchStatus(response.data.task_id);
             } else {
                 console.error('No task ID returned from API.');
             }
         } catch (error) {
             console.error('Error processing images:', error);
+            setLoading(false);
         }
     };
 
-    const fetchStatus = async (taskId) => {
+    const fetchStatus = useCallback (async (taskId) => {
+        setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8000/result/${taskId}`);
+            const response = await axios.get(`http://localhost:8000/result/${taskId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
             const data = response.data;
-            console.log('Task Status for ', taskId, ':', response.data); // Debugging line
 
             setStatus(data.status);
             setImagesProcessed(data.images_processed);
             setTotalImages(data.total_images);
-            setResults(data.result)
+            setResults(data.result);
 
             if (data.status === 'Completed') {
                 setResults(data.result);
-                console.log('Results: ', results)
                 setLoading(false);
+                clearTimeout(pollingTimeout.current); // Stop polling when complete
             } else {
-                // Call fetchStatus again in 5 seconds without immediate execution
-                setTimeout(() => fetchStatus(taskId), 5000);
+                pollingTimeout.current = setTimeout(() => fetchStatus(taskId), 5000);
             }
         } catch (error) {
             console.error('Error fetching task status:', error);
-            clearTimeout(fetchStatus); // Stop polling on error
+            setLoading(false);
+            clearTimeout(pollingTimeout.current); // Stop polling on error
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        if (taskId) {
+            fetchStatus(taskId); // Start polling if taskId is already set
+        }
+        return () => {
+            // Clear polling on component unmount
+            if (pollingTimeout.current) clearTimeout(pollingTimeout.current);
+        };
+    }, [fetchStatus, taskId]);
 
     return (
         <div>
             <div className="task-details">
-                {taskId !== null && (<div className="task-info">
-                    <strong>Task ID:</strong> {taskId}
-                </div>)}
-                {taskId !== null && (<div>
-                    <strong>Task Status:</strong> {status}
-                </div>)}
+                {taskId && (
+                    <div className="task-info">
+                        <strong>Task ID:</strong> {taskId}
+                    </div>
+                )}
+                {taskId && (
+                    <div>
+                        <strong>Task Status:</strong> {status}
+                    </div>
+                )}
                 <button className="task-button" onClick={handleProcessImages} disabled={loading}>
                     {loading ? 'Processing...' : 'Start Flower Count'}
                 </button>
             </div>
-            {/* Loader and Progress */}
-            {taskId !== null && (<div className="loader">
-                <strong>Images Processed:</strong> {imagesProcessed} / {totalImages}
-                <div className="progress-bar">
-                <div
-                    className="progress"
-                    style={{
-                    width: `${(imagesProcessed / totalImages) * 100}%`,
-                    }}
-                ></div>
+            {taskId && (
+                <div className="loader">
+                    <strong>Images Processed:</strong> {imagesProcessed} / {totalImages}
+                    <div className="progress-bar">
+                        <div
+                            className="progress"
+                            style={{
+                                width: `${(imagesProcessed / totalImages) * 100}%`,
+                            }}
+                        ></div>
+                    </div>
                 </div>
-            </div>)}
+            )}
             {(status === 'Processing' || status === 'Completed') && imagesProcessed > 0 && (
-                    <DataTable rows={results} />
-                )}
+                <DataTable rows={results} />
+            )}
         </div>
-        
     );
 };
 

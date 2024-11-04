@@ -39,10 +39,49 @@
 
 /* Navbar */
 .navbar {
+  display: flex;
+  justify-content: space-between;
   background-color: lightblue;
   padding: 10px;
   color: black;
   text-align: center;
+}
+
+/* Buttons */
+.log-buttons {
+  display: flex;
+  gap: 30px;
+}
+
+.login-button {
+  background-color: green;
+  color: #fff;
+  border: none;
+  padding: 8px 36px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.register-button {
+  background-color: blue;
+  color: #fff;
+  border: none;
+  padding: 8px 36px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.logout-button {
+  background-color: red;
+  color: #fff;
+  border: none;
+  padding: 8px 36px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.log-buttons button:hover {
+  background-color: grey;
 }
 
 /* Task Details */
@@ -89,3 +128,54 @@
   border-radius: 5px;
   transition: width 0.5s ease;
 }
+
+/* Form Container */
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Input Field Container */
+.input-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px; 
+}
+
+/* Label Styling */
+.input-label {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 8px; 
+  font-weight: 500;
+}
+
+/* Input Styling */
+.input-element {
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+/* Input Focus State */
+.input-element:focus {
+  border-color: #007bff; 
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3); 
+}
+
+/* Error Message Styling */
+.error-message {
+  color: red; 
+  margin-top: 10px; 
+  font-size: 0.9rem; 
+}
+
