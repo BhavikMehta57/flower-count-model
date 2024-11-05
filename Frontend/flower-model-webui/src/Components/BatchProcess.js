@@ -11,6 +11,7 @@ const BatchProcess = ({ token }) => {
     const [totalImages, setTotalImages] = useState(Number(localStorage.getItem('totalImages')) || 0);
     const [results, setResults] = useState(JSON.parse(localStorage.getItem('results') || '[{}]'));
     const pollingTimeout = useRef(null);
+    const [imageUrls, setImageUrls] = useState([]);
 
     // Save state to localStorage on each change
     useEffect(() => {
@@ -87,6 +88,23 @@ const BatchProcess = ({ token }) => {
     }, [token]);
 
     useEffect(() => {
+
+        const fetchImages = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8000/get-dataset/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                const data = response.data;
+                setImageUrls(data.images);
+            } catch (error) {
+                console.error('Error fetching images:', error);
+            }
+        };
+    
+        fetchImages();
+
         if (taskId) {
             fetchStatus(taskId); // Start polling if taskId is already set
         }
@@ -94,24 +112,39 @@ const BatchProcess = ({ token }) => {
             // Clear polling on component unmount
             if (pollingTimeout.current) clearTimeout(pollingTimeout.current);
         };
-    }, [fetchStatus, taskId]);
+    }, [fetchStatus, taskId, token]);
 
     return (
-        <div>
+        <div className='task-container'>
             <div className="task-details">
-                {taskId && (
-                    <div className="task-info">
-                        <strong>Task ID:</strong> {taskId}
-                    </div>
-                )}
-                {taskId && (
-                    <div>
-                        <strong>Task Status:</strong> {status}
-                    </div>
-                )}
-                <button className="task-button" onClick={handleProcessImages} disabled={loading}>
-                    {loading ? 'Processing...' : 'Start Flower Count'}
-                </button>
+                <div className="task-header">
+                    <span>Flower Count Dataset</span>
+                    <button className="task-button" onClick={handleProcessImages} disabled={loading}>
+                        {loading ? 'Processing...' : 'Start Flower Count'}
+                    </button>
+                </div>
+                <div className="image-grid">
+                    {imageUrls.map((url, index) => (
+                        <img
+                            key={index}
+                            src={`http://localhost:8000/images/${url}`}
+                            alt={`url`}
+                            className="grid-image"
+                        />
+                    ))}
+                </div>
+                <div className='task-sub-details'>
+                    {taskId && (
+                        <div className="task-info">
+                            <strong>Task ID:</strong> {taskId}
+                        </div>
+                    )}
+                    {taskId && (
+                        <div>
+                            <strong>Task Status:</strong> {status}
+                        </div>
+                    )}
+                </div>
             </div>
             {taskId && (
                 <div className="loader">

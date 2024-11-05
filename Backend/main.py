@@ -188,6 +188,14 @@ def process_images_task(task_id: str):
         "total_images": len(results)
     }
 
+@app.get("/get-dataset/")
+async def get_dataset(current_user: User = Depends(get_current_user)):
+    
+    image_files = [f for f in os.listdir(dataset_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
+    
+    return {"images": image_files}
+
+
 @app.post("/process-images/")
 async def process_images_endpoint(background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
     task_id = f"task_{len(task_results) + 1}"
