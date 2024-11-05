@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'package:android/components/AppColors.dart';
+import 'package:android/components/AppWidget.dart';
 import 'package:android/screens/MetaDataScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -83,7 +85,8 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Camera"),
+        backgroundColor: appColorPrimary,
+        title: text("Camera"),
       ),
       body: isLoadingCameras ? const Center(child: CircularProgressIndicator()) : Column(
         children: [
@@ -92,14 +95,15 @@ class _CameraScreenState extends State<CameraScreen> {
                 ? CameraPreview(_cameraController)
                 : const Center(child: CircularProgressIndicator()),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: _isCapturing ? _stopCapturing : _startCapturing,
-                child: Text(_isCapturing ? "Stop" : "Start"),
-              ),
-            ],
+          Container(
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Row(
+                children: [
+                  Expanded(child: shadowButton(_isCapturing ? "Stop Capturing" : "Start Capturing", () {_isCapturing ? _stopCapturing() : _startCapturing();})),
+                  SizedBox(width: 20,),
+                  Expanded(child: text("Count: ${_images.length}"))
+                ],
+              )
           ),
         ],
       ),

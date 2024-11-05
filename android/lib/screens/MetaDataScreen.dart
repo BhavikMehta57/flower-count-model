@@ -1,4 +1,6 @@
-import 'package:android/main.dart';
+import 'package:android/components/AppColors.dart';
+import 'package:android/components/AppWidget.dart';
+import 'package:android/home.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -56,7 +58,9 @@ class _MetadataScreenState extends State<MetadataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Metadata")),
+      appBar: AppBar(
+          backgroundColor: appColorPrimary,
+          title: text("Add Metadata")),
       body: ListView.builder(
         itemCount: images.length,
         itemBuilder: (context, index) {
@@ -74,7 +78,7 @@ class _MetadataScreenState extends State<MetadataScreen> {
               },
             ),
             trailing: IconButton(
-              icon: const Icon(Icons.delete),
+              icon: const Icon(Icons.delete, color: appColorPrimary,),
               onPressed: () {
                 // Remove image if not wanted.
                 setState(() {
