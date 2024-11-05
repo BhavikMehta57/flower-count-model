@@ -140,7 +140,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       {
                         String emailiD = email.text;
                         try{
-                          DocumentSnapshot ds = await _firestore.collection("admins").doc(emailiD).get();
+                          DocumentSnapshot ds = await _firestore.collection("users").doc(emailiD).get();
                           if(! ds.exists){
                             const snackBar = SnackBar(
                               content: Text('User does not exist!'),

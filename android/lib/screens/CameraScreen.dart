@@ -75,8 +75,10 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void dispose() {
     _cameraController.dispose();
-    if (_timer.isActive) {
-      _timer.cancel();
+    if (_isCapturing) {
+      if (_timer.isActive) {
+        _timer.cancel();
+      }
     }
     super.dispose();
   }

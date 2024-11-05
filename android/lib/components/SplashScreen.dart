@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:android/authentication/Login.dart';
+import 'package:android/components/AppColors.dart';
 import 'package:android/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class _SDSplashScreenState extends State<SDSplashScreen>
                 'Camera Assignment App',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.blue[900],
+                    color: appColorPrimary,
                     fontWeight: FontWeight.w500,
                     fontSize: 25),
               ),
